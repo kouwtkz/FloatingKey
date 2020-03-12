@@ -1,2 +1,2 @@
 # cw_onscl
- On screen launture
+ On screen launcher
