@@ -17,29 +17,6 @@ using System.Windows.Media.Imaging;
 namespace cw_onscl
 {
     [DataContract]
-    public class KeyData
-    {
-        [DataMember(Name = "code")]
-        public byte Code { get; set; }
-        [DataMember(Name = "ctrl")]
-        public bool Ctrl { get; set; }
-        [DataMember(Name = "alt")]
-        public bool Alt { get; set; }
-        [DataMember(Name = "shift")]
-        public bool Shift { get; set; }
-        [DataMember(Name = "win")]
-        public bool Win { get; set; }
-        [DataMember(Name = "keydown")]
-        public bool KeyDown { get; set; }
-        [DataMember(Name = "keyup")]
-        public bool KeyUp { get; set; }
-        public KeyData()
-        {
-            KeyDown = true;
-            KeyUp = true;
-        }
-    }
-    [DataContract]
     public class ButtonData
     {
         [DataMember(Name = "value")]
@@ -49,7 +26,7 @@ namespace cw_onscl
         [DataMember(Name = "hover-img")]
         public string HoverPicPath { get; set; }
         [DataMember(Name = "keydata")]
-        public List<KeyData> KeyDataList = new List<KeyData>();
+        public List<CI.KeyData<CI.KeySendType>> KeyDataList = new List<CI.KeyData<CI.KeySendType>>();
         [DataMember(Name = "pathdata")]
         public List<string> PathDataList = new List<string>();
         [DataMember(Name = "width")]
@@ -156,6 +133,11 @@ namespace cw_onscl
             ReadFormJSON();
             SyncFormViewData();
             SyncButtonData();
+            CI.InputTimer inputTimer = new CI.InputTimer(Keys.LButton);
+            inputTimer.MethodUp = (sender, e) =>
+            {
+            };
+            inputTimer.Start();
         }
         private void SyncFormViewData()
         {
@@ -289,28 +271,7 @@ namespace cw_onscl
                 ButtonData btnData = ButtonDataList[i];
                 try
                 {
-                    if (btnData.KeyDataList != null)
-                        foreach (KeyData keyData in btnData.KeyDataList)
-                        {
-                            if (keyData.Win) cInput.KeySend(Keys.LWin, CI.KeySendType.KeyDown);
-                            if (keyData.Ctrl) cInput.KeySend(Keys.LControlKey, CI.KeySendType.KeyDown);
-                            if (keyData.Alt) cInput.KeySend(Keys.LAltKey, CI.KeySendType.KeyDown);
-                            if (keyData.Shift) cInput.KeySend(Keys.LShiftKey, CI.KeySendType.KeyDown);
-                            CI.KeySendType keySendType = CI.KeySendType.KeyClick;
-                            if (keyData.KeyDown && !keyData.KeyUp)
-                            {
-                                keySendType = CI.KeySendType.KeyDown;
-                            }
-                            else if (keyData.KeyUp && !keyData.KeyDown)
-                            {
-                                keySendType = CI.KeySendType.KeyUp;
-                            }
-                            cInput.KeySend((Keys)keyData.Code, keySendType);
-                            if (keyData.Shift) cInput.KeySend(Keys.LShiftKey, CI.KeySendType.KeyUp);
-                            if (keyData.Alt) cInput.KeySend(Keys.LAltKey, CI.KeySendType.KeyUp);
-                            if (keyData.Ctrl) cInput.KeySend(Keys.LControlKey, CI.KeySendType.KeyUp);
-                            if (keyData.Win) cInput.KeySend(Keys.LWin, CI.KeySendType.KeyUp);
-                        }
+                    cInput.KeySend(btnData.KeyDataList);
                     if (btnData.PathDataList != null)
                         foreach (string path in btnData.PathDataList)
                         {
