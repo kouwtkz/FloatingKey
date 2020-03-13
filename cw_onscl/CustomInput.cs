@@ -77,6 +77,7 @@ namespace System.Windows.Input.Custom
             KeyUp = 1,
             KeyDown = 2,
             KeyHold = 3,
+            KeyToggle = 4,
         }
         public enum KeyInputType
         {
@@ -188,6 +189,11 @@ namespace System.Windows.Input.Custom
                     stockDelayTimer.Start();
                     keyData = null;
                     break;
+                case KeySendType.KeyToggle:
+                    var keypress = GetAsyncKeyState((Keys)keyData.Code) != 0;
+                    keydown = !keypress;
+                    keyup = keypress;
+                    break;
             }
             if (keyData == null) return;
             if (keyData.Win) KeySend(Keys.LWin, true, false);
@@ -206,11 +212,15 @@ namespace System.Windows.Input.Custom
         }
         public void KeySend(Keys key, bool keydown = true, bool keyup = true)
         {
+            KeySend((byte)key, keydown, keyup);
+        }
+        public void KeySend(byte key, bool keydown = true, bool keyup = true)
+        {
             int sendCount = (keydown ? 1 : 0) + (keyup ? 1 : 0);
             int sendCur = 0;
             if (keybdFlag)
             {
-                byte bVk = (byte)key;
+                byte bVk = key;
                 byte bScan = (byte)MapVirtualKey((short)key, 0);
                 if (keydown)
                 {
