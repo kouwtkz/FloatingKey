@@ -489,7 +489,7 @@ namespace cw_onscl
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
-            CI.ChangeWindowActivate(this, false);
+            CI.ChangeWindowActivate(this, false, false);
         }
     }
 }

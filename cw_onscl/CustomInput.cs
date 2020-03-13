@@ -276,21 +276,29 @@ namespace System.Windows.Input.Custom
         private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        private const int GWL_STYLE = -16;
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_NOACTIVATE = 0x08000000;
-        public static void ChangeWindowActivate(Window win, bool Activate)
+        private const int WS_EX_MAXIMIZE = 0x00010000;
+        private const int WS_POPUP = unchecked((int)0x80000000);
+
+
+
+        public static void ChangeWindowActivate(Window win, bool Activate, bool Maximize = true, int windef = GWL_EXSTYLE)
         {
             var helper = new WindowInteropHelper(win);
+            int winint = GetWindowLong(helper.Handle, GWL_STYLE);
+            int winexint = GetWindowLong(helper.Handle, GWL_EXSTYLE);
             if (Activate)
-            {
-                SetWindowLong(helper.Handle, GWL_EXSTYLE, GetWindowLong(helper.Handle, GWL_EXSTYLE)
-                    & ~WS_EX_NOACTIVATE);
-            }
+                winexint &= ~WS_EX_NOACTIVATE;
             else
-            {
-                SetWindowLong(helper.Handle, GWL_EXSTYLE, GetWindowLong(helper.Handle, GWL_EXSTYLE)
-                    | WS_EX_NOACTIVATE);
-            }
+                winexint |= WS_EX_NOACTIVATE;
+            if (Maximize)
+                winint |= WS_EX_MAXIMIZE;
+            else
+                winint &= ~WS_EX_MAXIMIZE;
+            SetWindowLong(helper.Handle, GWL_STYLE, winint);
+            SetWindowLong(helper.Handle, GWL_EXSTYLE, winexint);
         }
         //キーイベント取得
         [DllImport("user32.dll")]
