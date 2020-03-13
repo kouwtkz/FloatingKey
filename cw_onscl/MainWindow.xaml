@@ -22,6 +22,7 @@
         <System:String x:Key="MODE_CLOSE">CLOSE</System:String>
         <System:String x:Key="MODE_TOPMOST">RUN</System:String>
         <System:String x:Key="MODE_MIN">MIN</System:String>
+        <System:String x:Key="MODE_JSON">JSON</System:String>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +36,8 @@
             <Label Background="{x:Null}" Content="{DynamicResource MODE_TOPMOST}" Width="{DynamicResource list_W}" Height="{DynamicResource list_H}" FontSize="{DynamicResource Font_D}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_EDIT}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_MIN}"/>
-            <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_CLOSE}"/>
+            <Label Background="#FFFFEDED" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_CLOSE}"/>
+            <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_JSON}"/>
         </ComboBox>
         <StackPanel x:Name="sPanel" Margin="10,50,10,10" Grid.RowSpan="2">
             <Button x:Name="HoverTestButton" Content="Button" />

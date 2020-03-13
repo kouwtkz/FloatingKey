@@ -114,7 +114,8 @@ namespace cw_onscl
             MODE_TOPMOST = 0,
             MODE_EDITING = 1,
             MODE_MIN = 2,
-            MODE_CLOSE = 3;
+            MODE_CLOSE = 3,
+            MODE_JSON = 4;
         public MainWindow()
         {
             InitializeComponent();
@@ -357,6 +358,10 @@ namespace cw_onscl
                     WindowState = WindowState.Minimized;
                     break;
                 case MODE_CLOSE:
+                    Close();
+                    return;
+                case MODE_JSON:
+                    Process.Start("notepad.exe", JsonFileName);
                     Close();
                     return;
                 default:
