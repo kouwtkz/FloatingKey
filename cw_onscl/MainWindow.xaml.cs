@@ -133,11 +133,6 @@ namespace cw_onscl
             ReadFormJSON();
             SyncFormViewData();
             SyncButtonData();
-            CI.InputTimer inputTimer = new CI.InputTimer(Keys.LButton);
-            inputTimer.MethodUp = (sender, e) =>
-            {
-            };
-            inputTimer.Start();
         }
         private void SyncFormViewData()
         {

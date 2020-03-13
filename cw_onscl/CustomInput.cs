@@ -122,34 +122,31 @@ namespace System.Windows.Input.Custom
         }
 
         public InputTimer inputTimer;
-        private List<KeyData<KeySendType>> LockKeyStock;
+        private Dictionary<byte,KeyData<KeySendType>> LockKeyStock;
         private bool FlgNextUnLock;
-        private Timer DelayTimer;
-        public const double DelaySync = 100;
+        public const double DelaySync = 25;
         public CustomInput()
         {
-            LockKeyStock = new List<KeyData<KeySendType>>();
-            DelayTimer = new Timer(DelaySync);
-            DelayTimer.Elapsed += (sender, e) => {
-                DelayTimer.Stop();
-                if (LockKeyStock.Count > 0) FlgNextUnLock = true;
-            };
+            LockKeyStock = new Dictionary<byte, KeyData<KeySendType>>();
             inputTimer = new InputTimer(Keys.LButton);
-            inputTimer.MethodDown = (sender, e) =>
+            inputTimer.MethodDown = () =>
             {
                 if (!FlgNextUnLock)
                 {
-                    DelayTimer.Start();
+                    if (LockKeyStock.Count > 0) FlgNextUnLock = true;
                 }
             };
-            inputTimer.MethodUp = (sender, e) =>
+            inputTimer.MethodUp = () =>
             {
                 if (FlgNextUnLock)
                 {
                     FlgNextUnLock = false;
                     try
                     {
-                        foreach(var data in LockKeyStock) { KeySend(data); }
+                        foreach(var data in LockKeyStock) {
+                            KeySend(data.Value);
+                        }
+                        LockKeyStock.Clear();
                     }
                     catch { }
                 }
@@ -173,10 +170,23 @@ namespace System.Windows.Input.Custom
                     keyup = true;
                     break;
                 case KeySendType.KeyHold:
-                    keydown = true;
                     var subKeySend = new KeyData<KeySendType>(keyData);
-                    subKeySend.KeyType = KeySendType.KeyUp;
-                    LockKeyStock.Add(subKeySend);
+                    var stockDelayTimer = new Timer(DelaySync);
+                    stockDelayTimer.Elapsed += (sender, e) => {
+                        stockDelayTimer.Stop();
+                        if (LockKeyStock.ContainsKey(subKeySend.Code))
+                        {
+                            inputTimer.MethodUp();
+                        } else
+                        {
+                            subKeySend.KeyType = KeySendType.KeyDown;
+                            KeySend(subKeySend);
+                            subKeySend.KeyType = KeySendType.KeyUp;
+                            LockKeyStock.Add(subKeySend.Code, subKeySend);
+                        }
+                    };
+                    stockDelayTimer.Start();
+                    keyData = null;
                     break;
             }
             if (keyData == null) return;
@@ -278,7 +288,7 @@ namespace System.Windows.Input.Custom
         public class InputTimer
         {
             //A_Press:押している間、 A_Up:押した瞬間、 A_Down:離した瞬間
-            public Action<object, ElapsedEventArgs> MethodPress, MethodUp, MethodDown;
+            public Action MethodPress, MethodUp, MethodDown;
             public Timer TimerObj { get; private set; }
             public Keys KeyValue { get; private set; }
             public bool FlgPress { get; private set; }
@@ -291,33 +301,33 @@ namespace System.Windows.Input.Custom
                     bool press = GetAsyncKeyState(KeyValue) != 0;
                     if (press)
                     {
-                        Press(sender, e);
+                        Press();
                         if (!FlgPress)
                         {
                             FlgPress = true;
-                            Down(sender, e);
+                            Down();
                         }
                     } else
                     {
                         if (FlgPress)
                         {
                             FlgPress = false;
-                            Up(sender, e);
+                            Up();
                         }
                     }
                 };
             }
-            void Press(object sender, ElapsedEventArgs e)
+            void Press()
             {
-                MethodPress?.Invoke(sender, e);
+                MethodPress?.Invoke();
             }
-            void Up(object sender, ElapsedEventArgs e)
+            void Up()
             {
-                MethodUp?.Invoke(sender, e);
+                MethodUp?.Invoke();
             }
-            void Down(object sender, ElapsedEventArgs e)
+            void Down()
             {
-                MethodDown?.Invoke(sender, e);
+                MethodDown?.Invoke();
             }
             public void Start()
             {
