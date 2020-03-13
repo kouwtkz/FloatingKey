@@ -296,7 +296,10 @@ namespace cw_onscl
                         if (btnData.Background != "" && btnData.Background != null)
                             brush.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.Background));
                         if (btnData.HoverBackground != "" && btnData.HoverBackground != null)
+                        {
                             brush.HoverBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.HoverBackground));
+                            brush.ToggleBackground = brush.HoverBackground;
+                        }
                         if (btnData.ToggleBackground != "" && btnData.ToggleBackground != null)
                             brush.ToggleBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.ToggleBackground));
                     }
