@@ -290,6 +290,7 @@ namespace cw_onscl
                     style.Setters.Add(new Setter(MarginProperty, btnData.Margin));
                     if (btnData.Size > 0)
                         style.Setters.Add(new Setter(FontSizeProperty, btnData.Size));
+                    ImageBrush img = null;
                     if (btnData.PicPath == "" || btnData.PicPath == null || !File.Exists(btnData.PicPath))
                     {
                         content = btnData.Value;
@@ -307,7 +308,7 @@ namespace cw_onscl
                     {
                         try
                         {
-                            var img = new ImageBrush();
+                            img = new ImageBrush();
                             img.ImageSource = new BitmapImage(new Uri(btnData.PicPath, UriKind.RelativeOrAbsolute));
                             img.Stretch = Stretch.Uniform;
                             brush.Background = img;
@@ -332,7 +333,17 @@ namespace cw_onscl
                         brush.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.Foreground));
                     if (btnData.Border != "" && btnData.Border != null)
                         brush.Border = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.Border));
-                    ContentControl btn = new Label();
+                    ContentControl btn;
+                    if (img == null)
+                    {
+                        var button = new Button();
+                        button.Click += (o, e2) => { Button_Click(o, e2); return; };
+                        btn = button;
+                    } else
+                    {
+                        btn = new Label();
+                        btn.MouseLeftButtonDown += (o, e2) => { Button_Click(o, e2); return; };
+                    }
                     var febtn = btn;
                     febtn.SetValue(ContentProperty, content);
                     febtn.SetValue(FocusableProperty, false);
@@ -345,7 +356,6 @@ namespace cw_onscl
                     if (brush.Foreground != null) festyle.Setters.Add(new Setter(ForegroundProperty, brush.Foreground));
                     if (brush.Border != null) festyle.Setters.Add(new Setter(BorderBrushProperty, brush.Border));
 
-                    btn.MouseLeftButtonDown += (o, e2) => { Button_Click(o, e2); return; };
                     btn.Name = ButtonName + (i).ToString();
                     btn.Focusable = false;
                     btn.Style = style;
