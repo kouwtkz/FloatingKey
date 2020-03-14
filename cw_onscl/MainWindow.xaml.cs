@@ -127,8 +127,9 @@ namespace cw_onscl
         public string ButtonName { get; private set; } = "Button";
         // ブラシの色定義
         private Brush whiteBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White"));
-        private Brush lightgrayBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE0E0E0"));
-        private Brush grayBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD0D0D0"));
+        private Brush lightgrayBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD0D0D0"));
+        private Brush grayBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFC0C0C0"));
+        private Brush darkgrayBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0808080"));
         private Brush blackBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Black"));
         private Brush ClearBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000"));
         private Dictionary<ContentControl, BrushObject> ContentBrushes = new Dictionary<ContentControl, BrushObject>();
@@ -277,7 +278,7 @@ namespace cw_onscl
                     brush.Border = ClearBrush;
                     brush.HoverBackground = grayBrush;
                     brush.HoverForeground = null;
-                    brush.HoverBorder = null;
+                    brush.HoverBorder = darkgrayBrush;
                     brush.ToggleBackground = lightgrayBrush;
                     brush.ToggleForeground = null;
                     brush.ToggleBorder = null;
@@ -302,6 +303,8 @@ namespace cw_onscl
                         }
                         if (btnData.ToggleBackground != "" && btnData.ToggleBackground != null)
                             brush.ToggleBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.ToggleBackground));
+                        brush.Border = brush.Background;
+                        brush.ToggleBorder = brush.ToggleBackground;
                     }
                     else
                     {

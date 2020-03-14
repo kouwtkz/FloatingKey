@@ -28,6 +28,7 @@
                 <Rectangle Fill="{TemplateBinding Background}"/>
                 <ContentPresenter HorizontalAlignment="Center"
                           VerticalAlignment="Center"/>
+                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"></Border>
             </Grid>
         </ControlTemplate>
     </Window.Resources>
