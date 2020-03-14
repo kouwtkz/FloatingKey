@@ -478,6 +478,7 @@ namespace cw_onscl
                     ComboBox combo = FindName("combo") as ComboBox;
                     combo.SelectedIndex = tmpComboIndex;
                     WindowState = WindowState.Minimized;
+                    CI.ChangeWindowActivate(this, formEditingMode, false);
                     break;
                 case MODE_CLOSE:
                     Close();
