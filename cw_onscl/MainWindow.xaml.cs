@@ -242,7 +242,6 @@ namespace cw_onscl
 
         private void SyncButtonData(bool AppendFlag = false)
         {
-
             List<ButtonData> ButtonDataList = ThisFormData.ListData;
             StackPanel sPanel = FindName("sPanel") as StackPanel;
             int stock_button = 0;
@@ -276,7 +275,7 @@ namespace cw_onscl
                     brush.Background = whiteBrush;
                     brush.Foreground = blackBrush;
                     brush.Border = ClearBrush;
-                    brush.HoverBackground = null;
+                    brush.HoverBackground = grayBrush;
                     brush.HoverForeground = null;
                     brush.HoverBorder = null;
                     brush.ToggleBackground = lightgrayBrush;
@@ -333,17 +332,9 @@ namespace cw_onscl
                         brush.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.Foreground));
                     if (btnData.Border != "" && btnData.Border != null)
                         brush.Border = new SolidColorBrush((Color)ColorConverter.ConvertFromString(btnData.Border));
-                    ContentControl btn;
-                    if (img == null)
-                    {
-                        var button = new Button();
-                        button.Click += (o, e2) => { Button_Click(o, e2); return; };
-                        btn = button;
-                    } else
-                    {
-                        btn = new Label();
-                        btn.MouseLeftButtonDown += (o, e2) => { Button_Click(o, e2); return; };
-                    }
+                    Button btn = new Button();
+                    btn.Template = FindResource("buttonTemplate") as ControlTemplate;
+                    btn.Click += (o, e2) => { Button_Click(o, e2); return; };
                     var febtn = btn;
                     febtn.SetValue(ContentProperty, content);
                     febtn.SetValue(FocusableProperty, false);

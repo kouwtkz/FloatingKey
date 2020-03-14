@@ -7,7 +7,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="cw_onscl.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450" Width="100"
+        Height="122.063" Width="100"
         MinWidth="50"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -23,6 +23,13 @@
         <System:String x:Key="MODE_TOPMOST">RUN</System:String>
         <System:String x:Key="MODE_MIN">MIN</System:String>
         <System:String x:Key="MODE_JSON">JSON</System:String>
+        <ControlTemplate x:Key="buttonTemplate" TargetType="Button">
+            <Grid>
+                <Rectangle Fill="{TemplateBinding Background}"/>
+                <ContentPresenter HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+            </Grid>
+        </ControlTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
