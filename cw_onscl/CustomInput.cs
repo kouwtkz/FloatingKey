@@ -4,6 +4,7 @@ using System.Windows.Interop;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System.Timers;
+using System.Windows.Threading;
 
 namespace System.Windows.Input.Custom
 {
@@ -126,10 +127,10 @@ namespace System.Windows.Input.Custom
         private Dictionary<byte,KeyData<KeySendType>> LockKeyStock;
         private bool FlgNextUnLock;
         public const double DelaySync = 25;
-        public CustomInput()
+        public CustomInput(double interval = 1, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Normal)
         {
             LockKeyStock = new Dictionary<byte, KeyData<KeySendType>>();
-            inputTimer = new InputTimer(Keys.LButton);
+            inputTimer = new InputTimer(Keys.LButton, interval, dispatcher, priority);
             inputTimer.MethodDown = () =>
             {
                 if (!FlgNextUnLock)
@@ -307,33 +308,46 @@ namespace System.Windows.Input.Custom
         {
             //A_Press:押している間、 A_Up:押した瞬間、 A_Down:離した瞬間
             public Action MethodPress, MethodUp, MethodDown;
-            public Timer TimerObj { get; private set; }
+            public Timer TimerObj { get; private set; } = null;
+            public DispatcherTimer DpTimerObj { get; private set; } = null;
             public Keys KeyValue { get; private set; }
             public bool FlgPress { get; private set; }
-            public InputTimer(Keys keys, double interval = 1)
+            void LoopAction(object sender, EventArgs e)
+            {
+                bool press = GetAsyncKeyState(KeyValue) != 0;
+                if (press)
+                {
+                    Press();
+                    if (!FlgPress)
+                    {
+                        FlgPress = true;
+                        Down();
+                    }
+                }
+                else
+                {
+                    if (FlgPress)
+                    {
+                        FlgPress = false;
+                        Up();
+                    }
+                }
+            }
+            public InputTimer(Keys keys, double interval = 1,
+                Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Normal)
             {
                 KeyValue = keys;
-                TimerObj = new Timer(interval);
-                TimerObj.Elapsed += (sender, e) =>
+                if (dispatcher == null)
                 {
-                    bool press = GetAsyncKeyState(KeyValue) != 0;
-                    if (press)
-                    {
-                        Press();
-                        if (!FlgPress)
-                        {
-                            FlgPress = true;
-                            Down();
-                        }
-                    } else
-                    {
-                        if (FlgPress)
-                        {
-                            FlgPress = false;
-                            Up();
-                        }
-                    }
-                };
+                    TimerObj = new Timer(interval);
+                    TimerObj.Elapsed += (sender, e) => { LoopAction(sender, e); };
+                }
+                else
+                {
+                    DpTimerObj = new DispatcherTimer(priority, dispatcher);
+                    DpTimerObj.Interval = TimeSpan.FromMilliseconds(interval);
+                    DpTimerObj.Tick += (sender, e) => { LoopAction(sender, e); };
+                }
             }
             void Press()
             {
@@ -349,11 +363,17 @@ namespace System.Windows.Input.Custom
             }
             public void Start()
             {
-                TimerObj.Start();
+                if (DpTimerObj == null)
+                    TimerObj.Start();
+                else
+                    DpTimerObj.Start();
             }
             public void Stop()
             {
-                TimerObj.Stop();
+                if (DpTimerObj == null)
+                    TimerObj.Stop();
+                else
+                    DpTimerObj.Stop();
             }
         }
     }

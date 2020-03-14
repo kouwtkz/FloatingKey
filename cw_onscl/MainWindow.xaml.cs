@@ -115,7 +115,7 @@ namespace cw_onscl
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CI cInput = new CI();
+        private CI cInput = null;
         private FormData ThisFormData = null;
         private string JsonFileName = "config.json";
         // モニタニングタイマー
@@ -158,6 +158,7 @@ namespace cw_onscl
         public MainWindow()
         {
             InitializeComponent();
+            cInput = new CI(1, Dispatcher);
             ButtonList = new List<ContentControl>();
             ThisFormData = new FormData(this);
             FormEditingMode = false;
@@ -176,7 +177,7 @@ namespace cw_onscl
             ReadFormJSON();
             SyncFormViewData();
             SyncButtonData();
-            MoniterTimer = new DispatcherTimer(DispatcherPriority.Normal, this.Dispatcher);
+            MoniterTimer = new DispatcherTimer(DispatcherPriority.Normal, Dispatcher);
             MoniterTimer.Interval = TimeSpan.FromMilliseconds(MoniterTimerInterval);
             MoniterTimer.Tick += (o, e) =>
             {
