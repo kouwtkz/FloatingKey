@@ -276,12 +276,12 @@ namespace cw_onscl
                     brush.Background = whiteBrush;
                     brush.Foreground = blackBrush;
                     brush.Border = ClearBrush;
-                    brush.HoverBackground = grayBrush;
-                    brush.HoverForeground = blackBrush;
-                    brush.HoverBorder = ClearBrush;
+                    brush.HoverBackground = null;
+                    brush.HoverForeground = null;
+                    brush.HoverBorder = null;
                     brush.ToggleBackground = lightgrayBrush;
-                    brush.ToggleForeground = blackBrush;
-                    brush.ToggleBorder = ClearBrush;
+                    brush.ToggleForeground = null;
+                    brush.ToggleBorder = null;
                     var style = new Style();
                     object content = "";
                     if (btnData.Width > 0)
