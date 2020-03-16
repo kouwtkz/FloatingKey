@@ -143,14 +143,10 @@ namespace System.Windows.Input.Custom
                 if (FlgNextUnLock)
                 {
                     FlgNextUnLock = false;
-                    try
-                    {
-                        foreach(var data in LockKeyStock) {
-                            KeySend(data.Value);
-                        }
-                        LockKeyStock.Clear();
+                    foreach(var data in LockKeyStock) {
+                        KeySend(data.Value);
                     }
-                    catch { }
+                    LockKeyStock.Clear();
                 }
             };
             inputTimer.Start();
@@ -158,6 +154,7 @@ namespace System.Windows.Input.Custom
 
         public void KeySend(KeyData<KeySendType> keyData)
         {
+            if (keyData == null) return;
             bool keydown = false, keyup = false;
             switch (keyData.KeyType)
             {
