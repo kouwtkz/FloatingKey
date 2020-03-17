@@ -158,6 +158,7 @@ namespace cw_onscl
         public MainWindow()
         {
             InitializeComponent();
+            btnPanel = FindName("panel") as WrapPanel;
             cInput = new CI(1, Dispatcher);
             ButtonList = new List<ContentControl>();
             ThisFormData = new FormData(this);
@@ -173,7 +174,7 @@ namespace cw_onscl
                 }
             };
             //割合変形
-            SizeChanged += (o, e) =>
+            btnPanel.SizeChanged += (o, e) =>
             {
                 SyncResize();
             };
@@ -273,7 +274,6 @@ namespace cw_onscl
         private void SyncButtonData(bool AppendFlag = false)
         {
             List<ButtonData> ButtonDataList = ThisFormData.ListData;
-            btnPanel = FindName("panel") as WrapPanel;
             int stock_button = 0;
             if (AppendFlag)
             {
