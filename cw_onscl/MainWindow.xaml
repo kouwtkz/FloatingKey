@@ -47,8 +47,8 @@
             <Label Background="#FFFFEDED" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_CLOSE}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_JSON}"/>
         </ComboBox>
-        <StackPanel x:Name="sPanel" Margin="10,50,10,10" Grid.RowSpan="2">
+        <WrapPanel x:Name="panel" Margin="10,40,10,0" Grid.RowSpan="2" Orientation="Horizontal">
             <Button x:Name="HoverTestButton" Content="Button" />
-        </StackPanel>
+        </WrapPanel>
     </Grid>
 </Window>

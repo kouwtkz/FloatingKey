@@ -62,9 +62,8 @@ namespace cw_onscl
         public ButtonData()
         {
             Height = 30;
-            Width = Double.NaN;
-            Margin.Top = 10;
-            Margin.Bottom = 10;
+            Width = 1;
+            Margin.Top = 8;
             Size = 16;
         }
     }
@@ -118,6 +117,7 @@ namespace cw_onscl
         private CI cInput = null;
         private FormData ThisFormData = null;
         private string JsonFileName = "config.json";
+        private WrapPanel btnPanel = null;
         // モニタニングタイマー
         private DispatcherTimer MoniterTimer;
         private double MoniterTimerInterval = 1;
@@ -171,6 +171,11 @@ namespace cw_onscl
                 {
                     cInput.KeySend(kvPair.Key, false, true);
                 }
+            };
+            //割合変形
+            SizeChanged += (o, e) =>
+            {
+                SyncResize();
             };
             //FromPanelSetButtonData();
             //WriteFormJSON();
@@ -236,6 +241,29 @@ namespace cw_onscl
             };
             MoniterTimer.Start();
         }
+        private void SyncResize()
+        {
+            if (ButtonList == null) return;
+            List<ButtonData> ButtonDataList = ThisFormData.ListData;
+            double panelWidth = btnPanel.ActualWidth;
+            if (panelWidth == 0) return;
+            for (int i = 0; i < ButtonDataList.Count; i++)
+            {
+                ButtonData btnData = ButtonDataList[i];
+                double theWidth = panelWidth;
+                if (btnData.Width <= 1)
+                    ButtonList[i].Width = theWidth * btnData.Width;
+                if (
+                    (btnData.Margin.Left > 0 && btnData.Margin.Left < 1)
+                    || (btnData.Margin.Right > 0 && btnData.Margin.Right < 1))
+                {
+                    Thickness margin = new Thickness(0, btnData.Margin.Top, 0, btnData.Margin.Bottom);
+                    if (btnData.Margin.Left > 0 && btnData.Margin.Left < 1) margin.Left = theWidth * btnData.Margin.Left;
+                    if (btnData.Margin.Right > 0 && btnData.Margin.Right < 1) margin.Right = theWidth * btnData.Margin.Right;
+                    ButtonList[i].Margin = margin;
+                }
+            }
+        }
         private void SyncFormViewData()
         {
             Width = ThisFormData.Width;
@@ -245,15 +273,15 @@ namespace cw_onscl
         private void SyncButtonData(bool AppendFlag = false)
         {
             List<ButtonData> ButtonDataList = ThisFormData.ListData;
-            StackPanel sPanel = FindName("sPanel") as StackPanel;
+            btnPanel = FindName("panel") as WrapPanel;
             int stock_button = 0;
             if (AppendFlag)
             {
-                stock_button = sPanel.Children.Count;
+                stock_button = btnPanel.Children.Count;
             }
             else
             {
-                sPanel.Children.Clear();
+                btnPanel.Children.Clear();
                 ButtonList.Clear();
                 ContentBrushes.Clear();
             }
@@ -264,6 +292,7 @@ namespace cw_onscl
                 for (int i = 0; i < ButtonDataList.Count; i++)
                 {
                     ButtonData btnData = ButtonDataList[i];
+                    if (btnData.Width == double.NaN) btnData.Width = 1;
                     foreach (var keydata in btnData.KeyDataList)
                     {
                         var code = keydata.Code;
@@ -355,19 +384,20 @@ namespace cw_onscl
                     btn.Focusable = false;
                     btn.Style = style;
                     ContentBrushes.Add(btn, brush);
-                    sPanel.Children.Add(btn);
+                    btnPanel.Children.Add(btn);
                     ButtonList.Add(btn);
                 }
+                SyncResize();
             }
         }
         private void FromPanelSetButtonData(bool AppendFlag = false)
         {
             List<ButtonData> ButtonDataList = ThisFormData.ListData;
             if (!AppendFlag) ButtonDataList.Clear();
-            StackPanel sPanel = FindName("sPanel") as StackPanel;
-            for (int i = 0; i < sPanel.Children.Count; i++)
+            StackPanel panel = FindName("panel") as StackPanel;
+            for (int i = 0; i < panel.Children.Count; i++)
             {
-                ContentControl btn = sPanel.Children[i] as ContentControl;
+                ContentControl btn = panel.Children[i] as ContentControl;
                 ButtonData btnData = new ButtonData();
                 btnData.Value = btn.Content.ToString();
                 btnData.Width = btn.Width;
@@ -430,8 +460,8 @@ namespace cw_onscl
         }
         private void SyncPanelMenu()
         {
-            StackPanel sPanel = FindName("sPanel") as StackPanel;
-            if (sPanel == null) return;
+            StackPanel panel = FindName("panel") as StackPanel;
+            if (panel == null) return;
             if (FormEditingMode)
             {
                 ContextMenu cMenu = new ContextMenu();
@@ -442,7 +472,7 @@ namespace cw_onscl
                 m = new MenuItem();
                 m.Header = "後に追加";
                 cMenu.Items.Add(m);
-                foreach (var item in sPanel.Children)
+                foreach (var item in panel.Children)
                 {
                     try
                     {
@@ -454,7 +484,7 @@ namespace cw_onscl
             }
             else
             {
-                foreach (var item in sPanel.Children)
+                foreach (var item in panel.Children)
                 {
                     try
                     {
