@@ -126,7 +126,7 @@ namespace System.Windows.Input.Custom
         public InputTimer inputTimer;
         private Dictionary<byte,KeyData<KeySendType>> LockKeyStock;
         private bool FlgNextUnLock;
-        public const double DelaySync = 25;
+        public const double DelaySync = 40;
         public CustomInput(double interval = 1, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Normal)
         {
             LockKeyStock = new Dictionary<byte, KeyData<KeySendType>>();
@@ -173,10 +173,7 @@ namespace System.Windows.Input.Custom
                     var stockDelayTimer = new Timer(DelaySync);
                     stockDelayTimer.Elapsed += (sender, e) => {
                         stockDelayTimer.Stop();
-                        if (LockKeyStock.ContainsKey(subKeySend.Code))
-                        {
-                            inputTimer.MethodUp();
-                        } else
+                        if (!LockKeyStock.ContainsKey(subKeySend.Code))
                         {
                             subKeySend.KeyType = KeySendType.KeyDown;
                             KeySend(subKeySend);
