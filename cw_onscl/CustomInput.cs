@@ -27,8 +27,8 @@ namespace System.Windows.Input.Custom
         [StructLayout(LayoutKind.Sequential)]
         private struct KEYBDINPUT
         {
-            public short wVk;
-            public short wScan;
+            public int wVk;
+            public int wScan;
             public int dwFlags;
             public int time;
             public int dwExtraInfo;
@@ -90,7 +90,7 @@ namespace System.Windows.Input.Custom
         public class KeyData<T> where T : Enum
         {
             [DataMember(Name = "code")]
-            public byte Code { get; set; }
+            public int Code { get; set; }
             [DataMember(Name = "ctrl")]
             public bool Ctrl { get; set; }
             [DataMember(Name = "alt")]
@@ -102,14 +102,14 @@ namespace System.Windows.Input.Custom
             [DataMember(Name = "keytype")]
             public T KeyType { get; set; }
             public KeyData() { }
-            public KeyData(byte code, T keyType)
+            public KeyData(int code, T keyType)
             {
                 Code = code;
                 KeyType = keyType;
             }
             public KeyData(Keys code, T keyType)
             {
-                Code = (byte)code;
+                Code = (int)code;
                 KeyType = keyType;
             }
             public KeyData(KeyData<T> keyData)
@@ -124,12 +124,12 @@ namespace System.Windows.Input.Custom
         }
 
         public InputTimer inputTimer;
-        private Dictionary<byte,KeyData<KeySendType>> LockKeyStock;
+        private Dictionary<int,KeyData<KeySendType>> LockKeyStock;
         private bool FlgNextUnLock;
         public const double DelaySync = 40;
         public CustomInput(double interval = 1, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Normal)
         {
-            LockKeyStock = new Dictionary<byte, KeyData<KeySendType>>();
+            LockKeyStock = new Dictionary<int, KeyData<KeySendType>>();
             inputTimer = new InputTimer(Keys.LButton, interval, dispatcher, priority);
             inputTimer.MethodDown = () =>
             {
@@ -207,16 +207,16 @@ namespace System.Windows.Input.Custom
         }
         public void KeySend(Keys key, bool keydown = true, bool keyup = true)
         {
-            KeySend((byte)key, keydown, keyup);
+            KeySend((int)key, keydown, keyup);
         }
-        public void KeySend(byte key, bool keydown = true, bool keyup = true)
+        public void KeySend(int key, bool keydown = true, bool keyup = true)
         {
             int sendCount = (keydown ? 1 : 0) + (keyup ? 1 : 0);
             int sendCur = 0;
             if (keybdFlag)
             {
-                byte bVk = key;
-                byte bScan = (byte)MapVirtualKey((short)key, 0);
+                int bVk = key;
+                int bScan = MapVirtualKey(key, 0);
                 if (keydown)
                 {
                     keybd_event(bVk, bScan, KEYEVENTF_KEYDOWN, (UIntPtr)0);
@@ -228,8 +228,8 @@ namespace System.Windows.Input.Custom
             }
             else
             {
-                short wVk = (short)key;
-                short wScan = (short)MapVirtualKey(wVk, 0);
+                int wVk = key;
+                int wScan = MapVirtualKey(wVk, 0);
                 INPUT[] inp = new INPUT[sendCount];
                 if (keydown)
                 {
@@ -265,7 +265,7 @@ namespace System.Windows.Input.Custom
 
         // お借りしました http://zourimusi.hatenadiary.jp/entry/20131018/1382093051
         [DllImport("user32.dll")]
-        private static extern uint keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+        private static extern uint keybd_event(int bVk, int bScan, uint dwFlags, UIntPtr dwExtraInfo);
         // アクティブにしないウィンドウ処理
         [DllImport("user32.dll")]
         private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);

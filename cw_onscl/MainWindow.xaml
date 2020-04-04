@@ -23,6 +23,7 @@
         <System:String x:Key="MODE_TOPMOST">RUN</System:String>
         <System:String x:Key="MODE_MIN">MIN</System:String>
         <System:String x:Key="MODE_JSON">JSON</System:String>
+        <System:String x:Key="MODE_RELOAD">RELOAD</System:String>
         <ControlTemplate x:Key="buttonTemplate" TargetType="Button">
             <Grid>
                 <Rectangle Fill="{TemplateBinding Background}"/>
@@ -46,6 +47,7 @@
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_MIN}"/>
             <Label Background="#FFFFEDED" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_CLOSE}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_JSON}"/>
+            <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_RELOAD}"/>
         </ComboBox>
         <WrapPanel x:Name="panel" Margin="10,40,10,0" Grid.RowSpan="2" Orientation="Horizontal">
             <Button x:Name="HoverTestButton" Content="Button" />

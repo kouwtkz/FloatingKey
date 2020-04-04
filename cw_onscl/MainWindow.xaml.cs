@@ -86,6 +86,8 @@ namespace cw_onscl
         public string Border { get; set; }
         [DataMember(Name = "monitor")]
         public bool Monitor { get; set; }
+        [DataMember(Name = "app-json")]
+        public string AppJson { get; set; }
         public FormData()
         {
             Height = 400;
@@ -121,6 +123,8 @@ namespace cw_onscl
         // モニタニングタイマー
         private DispatcherTimer MoniterTimer;
         private double MoniterTimerInterval = 1;
+        // JSONを開くアプリケーション
+        private string default_app_json = "notepad.exe";
         // 最小化した際に戻すための変数
         private int tmpComboIndex = 0;
         // ボタン名
@@ -151,10 +155,11 @@ namespace cw_onscl
             MODE_EDITING = 1,
             MODE_MIN = 2,
             MODE_CLOSE = 3,
-            MODE_JSON = 4;
+            MODE_JSON = 4,
+            MODE_RELOAD = 5;
         private List<ContentControl> ButtonList;
-        private Dictionary<byte, bool> keysdic = new Dictionary<byte, bool>();
-        private List<byte> keyslist = new List<byte>();
+        private Dictionary<int, bool> keysdic = new Dictionary<int, bool>();
+        private List<int> keyslist = new List<int>();
         public MainWindow()
         {
             InitializeComponent();
@@ -499,6 +504,8 @@ namespace cw_onscl
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
+            ComboBox combo;
+            combo = FindName("combo") as ComboBox;
             switch (comboBox.SelectedIndex)
             {
                 case MODE_EDITING:
@@ -506,7 +513,6 @@ namespace cw_onscl
                     tmpComboIndex = comboBox.SelectedIndex;
                     break;
                 case MODE_MIN:
-                    ComboBox combo = FindName("combo") as ComboBox;
                     combo.SelectedIndex = tmpComboIndex;
                     WindowState = WindowState.Minimized;
                     CI.ChangeWindowActivate(this, formEditingMode, false);
@@ -515,9 +521,29 @@ namespace cw_onscl
                     Close();
                     return;
                 case MODE_JSON:
-                    Process.Start("notepad.exe", JsonFileName);
-                    Close();
-                    return;
+                    string path = ThisFormData.AppJson;
+                    path = Regex.Replace(path, @"\%([^\%]*)\%", x =>
+                    {
+                        string env = x.Groups[1].Value;
+                        return Environment.GetEnvironmentVariable(env);
+                    });
+                    ProcessStartInfo p = new ProcessStartInfo(path, JsonFileName);
+                    p.LoadUserProfile = true;
+                    try
+                    {
+                        Process.Start(p);
+                    } catch (Exception _e)
+                    {
+                        p.FileName = default_app_json;
+                        Process.Start(p);
+                    }
+                    combo.SelectedIndex = tmpComboIndex;
+                    break;
+                case MODE_RELOAD:
+                    ReadFormJSON();
+                    SyncButtonData();
+                    combo.SelectedIndex = tmpComboIndex;
+                    break;
                 default:
                     FormEditingMode = false;
                     tmpComboIndex = comboBox.SelectedIndex;
