@@ -370,5 +370,13 @@ namespace System.Windows.Input.Custom
                     DpTimerObj.Stop();
             }
         }
+        // 環境変数ありのパスから変換する関数
+        public static string ExpandEnvironmentStrings(string path)
+        {
+            return Text.RegularExpressions.Regex.Replace(path, @"\%([^\%]*)\%", x =>
+            {
+                return Environment.GetEnvironmentVariable(x.Groups[1].Value);
+            });
+        }
     }
 }

@@ -429,7 +429,7 @@ namespace cw_onscl
                     if (btnData.PathDataList != null)
                         foreach (string path in btnData.PathDataList)
                         {
-                            Process.Start(path);
+                            Process.Start(CI.ExpandEnvironmentStrings(path));
                         }
                 }
                 catch (Exception ee)
@@ -521,18 +521,12 @@ namespace cw_onscl
                     Close();
                     return;
                 case MODE_JSON:
-                    string path = ThisFormData.AppJson;
-                    path = Regex.Replace(path, @"\%([^\%]*)\%", x =>
-                    {
-                        string env = x.Groups[1].Value;
-                        return Environment.GetEnvironmentVariable(env);
-                    });
-                    ProcessStartInfo p = new ProcessStartInfo(path, JsonFileName);
+                    ProcessStartInfo p = new ProcessStartInfo(CI.ExpandEnvironmentStrings(ThisFormData.AppJson), JsonFileName);
                     p.LoadUserProfile = true;
                     try
                     {
                         Process.Start(p);
-                    } catch (Exception _e)
+                    } catch
                     {
                         p.FileName = default_app_json;
                         Process.Start(p);
