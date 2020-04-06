@@ -16,8 +16,8 @@
         Topmost="True"
     >
     <Window.Resources>
-        <System:Double x:Key="list_H">30</System:Double>
-        <System:Double x:Key="Font_D">16</System:Double>
+        <System:Double x:Key="list_H">24</System:Double>
+        <System:Double x:Key="Font_D">13</System:Double>
         <System:String x:Key="MODE_EDIT">EDIT</System:String>
         <System:String x:Key="MODE_CLOSE">CLOSE</System:String>
         <System:String x:Key="MODE_TOPMOST">RUN</System:String>
@@ -49,7 +49,7 @@
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_JSON}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_RELOAD}"/>
         </ComboBox>
-        <WrapPanel x:Name="panel" Margin="10,40,10,0" Grid.RowSpan="2" Orientation="Horizontal">
+        <WrapPanel x:Name="panel" Margin="10,34,10,0" Grid.RowSpan="2" Orientation="Horizontal">
             <Button x:Name="HoverTestButton" Content="Button" />
         </WrapPanel>
     </Grid>

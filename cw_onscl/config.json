@@ -1,0 +1,119 @@
+{
+    "width": 80,
+    "height": 160,
+    "monitor": true,
+    "app-json": "%userprofile%/AppData/Local/Programs/Microsoft VS Code/Code.exe",
+    "list": [
+        {
+            "value": "Shift",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 160,
+                    "keytype": 3
+                }
+            ],
+            "margin": {
+                "Top": 4, "Right": 0.08
+            }
+        },
+        {
+            "value": "sCtrl",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 160,
+                    "keytype": 4
+                },
+                {
+                    "code": 162,
+                    "keytype": 4
+                }
+            ],
+            "margin": {
+                "Top": 4, "Right": 0.04
+            }
+        },
+        {
+            "value": "Ctrl",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 162,
+                    "keytype": 4
+                }
+            ],
+            "margin": {
+                "Top": 4
+            }
+        },
+        {
+            "value": "sAlt",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 160,
+                    "keytype": 3
+                },
+                {
+                    "code": 164,
+                    "keytype": 3
+                }
+            ],
+            "margin": {
+                "Top": 4, "Right": 0.04
+            }
+        },
+        {
+            "value": "Alt",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 164,
+                    "keytype": 3
+                }
+            ],
+            "margin": {
+                "Top": 4
+            }
+        },
+        {
+            "value": "saCtrl",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 160,
+                    "keytype": 3
+                },
+                {
+                    "code": 162,
+                    "keytype": 3
+                },
+                {
+                    "code": 164,
+                    "keytype": 3
+                }
+            ],
+            "margin": {
+                "Top": 4, "Right": 0.04
+            }
+        },
+        {
+            "value": "aCtrl",
+            "width": "0.48",
+            "keydata": [
+                {
+                    "code": 162,
+                    "keytype": 3
+                },
+                {
+                    "code": 164,
+                    "keytype": 3
+                }
+            ],
+            "margin": {
+                "Top": 4
+            }
+        }
+    ]
+}

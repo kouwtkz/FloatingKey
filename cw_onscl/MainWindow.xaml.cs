@@ -26,7 +26,7 @@ namespace cw_onscl
         public string PicPath { get; set; }
         [DataMember(Name = "hover-img")]
         public string HoverPicPath { get; set; }
-        [DataMember(Name = "tggle-img")]
+        [DataMember(Name = "toggle-img")]
         public string TogglePicPath { get; set; }
         [DataMember(Name = "keydata")]
         public List<CI.KeyData<CI.KeySendType>> KeyDataList = new List<CI.KeyData<CI.KeySendType>>();
@@ -272,12 +272,15 @@ namespace cw_onscl
         }
         private void SyncFormViewData()
         {
+            if (ThisFormData.Width == 0 || ThisFormData.Width == double.NaN) ThisFormData.Width = 100;
+            if (ThisFormData.Height == 0 || ThisFormData.Height == double.NaN) ThisFormData.Width = 100;
             Width = ThisFormData.Width;
             Height = ThisFormData.Height;
         }
 
         private void SyncButtonData(bool AppendFlag = false)
         {
+            if (ThisFormData.ListData == null) ThisFormData.ListData = new List<ButtonData>();
             List<ButtonData> ButtonDataList = ThisFormData.ListData;
             int stock_button = 0;
             if (AppendFlag)
@@ -297,7 +300,8 @@ namespace cw_onscl
                 for (int i = 0; i < ButtonDataList.Count; i++)
                 {
                     ButtonData btnData = ButtonDataList[i];
-                    if (btnData.Width == double.NaN) btnData.Width = 1;
+                    if (btnData.Width == 0 || btnData.Width == double.NaN) btnData.Width = 1;
+                    if (btnData.Height == 0 || btnData.Height == double.NaN) btnData.Height = 20;
                     foreach (var keydata in btnData.KeyDataList)
                     {
                         var code = keydata.Code;
@@ -536,6 +540,7 @@ namespace cw_onscl
                 case MODE_RELOAD:
                     ReadFormJSON();
                     SyncButtonData();
+                    SyncFormViewData();
                     combo.SelectedIndex = tmpComboIndex;
                     break;
                 default:
