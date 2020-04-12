@@ -43,7 +43,7 @@
                 <System:Double x:Key="list_W">100</System:Double>
             </ComboBox.Resources>
             <Label Background="{x:Null}" Content="{DynamicResource MODE_TOPMOST}" Width="{DynamicResource list_W}" Height="{DynamicResource list_H}" FontSize="{DynamicResource Font_D}"/>
-            <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_EDIT}"/>
+            <!--<Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_EDIT}"/>-->
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_MIN}"/>
             <Label Background="#FFFFEDED" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_CLOSE}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_JSON}"/>

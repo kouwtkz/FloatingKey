@@ -150,13 +150,15 @@ namespace cw_onscl
             }
             get { return formEditingMode; }
         }
-        private const int
-            MODE_TOPMOST = 0,
-            MODE_EDITING = 1,
-            MODE_MIN = 2,
-            MODE_CLOSE = 3,
-            MODE_JSON = 4,
-            MODE_RELOAD = 5;
+        private enum MODE
+        {
+            TOPMOST,
+            //EDITING,
+            MIN,
+            CLOSE,
+            JSON,
+            RELOAD
+        };
         private List<ContentControl> ButtonList;
         private Dictionary<int, bool> keysdic = new Dictionary<int, bool>();
         private List<int> keyslist = new List<int>();
@@ -510,21 +512,21 @@ namespace cw_onscl
             ComboBox comboBox = (ComboBox)sender;
             ComboBox combo;
             combo = FindName("combo") as ComboBox;
-            switch (comboBox.SelectedIndex)
+            switch ((MODE)Enum.ToObject(typeof(MODE), combo.SelectedIndex))
             {
-                case MODE_EDITING:
-                    FormEditingMode = true;
-                    tmpComboIndex = comboBox.SelectedIndex;
-                    break;
-                case MODE_MIN:
+                //case MODE.EDITING:
+                //    FormEditingMode = true;
+                //    tmpComboIndex = comboBox.SelectedIndex;
+                //    break;
+                case MODE.MIN:
                     combo.SelectedIndex = tmpComboIndex;
                     WindowState = WindowState.Minimized;
                     CI.ChangeWindowActivate(this, formEditingMode, false);
                     break;
-                case MODE_CLOSE:
+                case MODE.CLOSE:
                     Close();
                     return;
-                case MODE_JSON:
+                case MODE.JSON:
                     ProcessStartInfo p = new ProcessStartInfo(CI.ExpandEnvironmentStrings(ThisFormData.AppJson), JsonFileName);
                     p.LoadUserProfile = true;
                     try
@@ -537,7 +539,7 @@ namespace cw_onscl
                     }
                     combo.SelectedIndex = tmpComboIndex;
                     break;
-                case MODE_RELOAD:
+                case MODE.RELOAD:
                     ReadFormJSON();
                     SyncButtonData();
                     SyncFormViewData();
