@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cw_onscl", "cw_onscl\cw_onscl.csproj", "{4C6FEE97-7BB0-46BA-B7C3-6CD4705E8061}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloatingKey", "FloatingKeyProject\FloatingKey.csproj", "{4C6FEE97-7BB0-46BA-B7C3-6CD4705E8061}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

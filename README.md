@@ -1,2 +1,8 @@
-# cw_onscl
- On screen launcher
+# フローティングキー (Floating Key)
+Windows(主にタブレット)で修飾キーなどの入力補助をするツールです！
+
+配布しているZIP内は以下のデータが入っています
+FloatingKey.exe … アプリケーション本体
+config.json … 設定ファイル、見た目を変える際は直接編集してください
+readme.txt … このファイル、解説などを載せます
+Keys.cs … このアプリで使用したキーコード対応ファイル
