@@ -76,6 +76,8 @@ namespace cw_onscl
         public double Width { get; set; }
         [DataMember(Name = "height")]
         public double Height { get; set; }
+        [DataMember(Name = "scale")]
+        public double Scale { get; set; }
         [DataMember(Name = "img")]
         public string PicPath { get; set; }
         [DataMember(Name = "color")]
@@ -275,9 +277,16 @@ namespace cw_onscl
         private void SyncFormViewData()
         {
             if (ThisFormData.Width == 0 || ThisFormData.Width == double.NaN) ThisFormData.Width = 100;
-            if (ThisFormData.Height == 0 || ThisFormData.Height == double.NaN) ThisFormData.Width = 100;
-            Width = ThisFormData.Width;
-            Height = ThisFormData.Height;
+            if (ThisFormData.Height == 0 || ThisFormData.Height == double.NaN) ThisFormData.Height = 100;
+            if (ThisFormData.Scale == 0 || ThisFormData.Scale == double.NaN) ThisFormData.Scale = 1;
+            Width = ThisFormData.Width * ThisFormData.Scale;
+            Height = ThisFormData.Height * ThisFormData.Scale;
+            Resources["list_W"] = (double)Resources["list_W"] * ThisFormData.Scale;
+            Resources["list_H"] = (double)Resources["list_H"] * ThisFormData.Scale;
+            var margin_button_flame = (Thickness)Resources["margin_button_flame"];
+            margin_button_flame.Top = (21 + (double)Resources["Font_D"]) * ThisFormData.Scale;
+            Resources["margin_button_flame"] = margin_button_flame;
+            Resources["Font_D"] = (double)Resources["Font_D"] * ThisFormData.Scale;
         }
 
         private void SyncButtonData(bool AppendFlag = false)
@@ -326,11 +335,12 @@ namespace cw_onscl
                     var style = new Style();
                     object content = "";
                     if (btnData.Width > 0)
-                        style.Setters.Add(new Setter(WidthProperty, btnData.Width));
-                    style.Setters.Add(new Setter(HeightProperty, btnData.Height));
-                    style.Setters.Add(new Setter(MarginProperty, btnData.Margin));
-                    if (btnData.Size > 0)
-                        style.Setters.Add(new Setter(FontSizeProperty, btnData.Size));
+                        style.Setters.Add(new Setter(WidthProperty, btnData.Width * ThisFormData.Scale));
+                    style.Setters.Add(new Setter(HeightProperty, btnData.Height * ThisFormData.Scale));
+                    var margin = new Thickness(btnData.Margin.Left * ThisFormData.Scale, btnData.Margin.Top * ThisFormData.Scale, btnData.Margin.Right * ThisFormData.Scale, btnData.Margin.Bottom * ThisFormData.Scale);
+                    style.Setters.Add(new Setter(MarginProperty, margin));
+                    if (btnData.Size <= 0) btnData.Size = 12;
+                    style.Setters.Add(new Setter(FontSizeProperty, btnData.Size * ThisFormData.Scale));
                     ImageBrush img = null;
                     if (btnData.PicPath == "" || btnData.PicPath == null || !File.Exists(btnData.PicPath))
                     {

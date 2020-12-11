@@ -16,6 +16,7 @@
         Topmost="True"
     >
     <Window.Resources>
+        <System:Double x:Key="list_W">100</System:Double>
         <System:Double x:Key="list_H">24</System:Double>
         <System:Double x:Key="Font_D">13</System:Double>
         <System:String x:Key="MODE_EDIT">EDIT</System:String>
@@ -32,6 +33,7 @@
                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"></Border>
             </Grid>
         </ControlTemplate>
+        <Thickness x:Key="margin_button_flame">10,34,10,0</Thickness>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,9 +41,6 @@
             <RowDefinition Height="23*"/>
         </Grid.RowDefinitions>
         <ComboBox x:Name="combo" Height="{DynamicResource list_H}" Margin="10,10,10,0" VerticalAlignment="Top" FontSize="{DynamicResource Font_D}" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged" Background="Black">
-            <ComboBox.Resources>
-                <System:Double x:Key="list_W">100</System:Double>
-            </ComboBox.Resources>
             <Label Background="{x:Null}" Content="{DynamicResource MODE_TOPMOST}" Width="{DynamicResource list_W}" Height="{DynamicResource list_H}" FontSize="{DynamicResource Font_D}"/>
             <!--<Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_EDIT}"/>-->
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_MIN}"/>
@@ -49,7 +48,7 @@
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_JSON}"/>
             <Label Background="{x:Null}" Height="{DynamicResource list_H}" Width="{DynamicResource list_W}" Content="{DynamicResource MODE_RELOAD}"/>
         </ComboBox>
-        <WrapPanel x:Name="panel" Margin="10,34,10,0" Grid.RowSpan="2" Orientation="Horizontal">
+        <WrapPanel x:Name="panel" Margin="{DynamicResource margin_button_flame}" Grid.RowSpan="2" Orientation="Horizontal">
             <Button x:Name="HoverTestButton" Content="Button" />
         </WrapPanel>
     </Grid>
