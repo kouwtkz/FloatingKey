@@ -124,7 +124,7 @@ namespace System.Windows.Input.Custom
         }
 
         public InputTimer inputTimer;
-        private Dictionary<int,KeyData<KeySendType>> LockKeyStock;
+        public Dictionary<int,KeyData<KeySendType>> LockKeyStock;
         private bool FlgNextUnLock;
         public const double DelaySync = 40;
         public CustomInput(double interval = 1, Dispatcher dispatcher = null, DispatcherPriority priority = DispatcherPriority.Normal)

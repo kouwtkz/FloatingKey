@@ -30,8 +30,10 @@ namespace cw_onscl
         public string TogglePicPath { get; set; }
         [DataMember(Name = "keydata")]
         public List<CI.KeyData<CI.KeySendType>> KeyDataList = new List<CI.KeyData<CI.KeySendType>>();
-        [DataMember(Name = "autotoggle")]
-        public bool AutoToggle { get; set; }
+        [DataMember(Name = "overlap")]
+        public bool Overlap { get; set; }
+        [DataMember(Name = "monomonitor")]
+        public bool MonoMonitor { get; set; }
         [DataMember(Name = "pathdata")]
         public List<string> PathDataList = new List<string>();
         [DataMember(Name = "width")]
@@ -126,8 +128,8 @@ namespace cw_onscl
         private string JsonFileName = "config.json";
         private WrapPanel btnPanel = null;
         // モニタニングタイマー
-        private DispatcherTimer MoniterTimer;
-        private double MoniterTimerInterval = 1;
+        private DispatcherTimer MonitorTimer;
+        private double MonitorTimerInterval = 1;
         // JSONを開くアプリケーション
         private string default_app_json = "notepad.exe";
         // 最小化した際に戻すための変数
@@ -196,9 +198,9 @@ namespace cw_onscl
             ReadFormJSON();
             SyncFormViewData();
             SyncButtonData();
-            MoniterTimer = new DispatcherTimer(DispatcherPriority.Normal, Dispatcher);
-            MoniterTimer.Interval = TimeSpan.FromMilliseconds(MoniterTimerInterval);
-            MoniterTimer.Tick += (o, e) =>
+            MonitorTimer = new DispatcherTimer(DispatcherPriority.Normal, Dispatcher);
+            MonitorTimer.Interval = TimeSpan.FromMilliseconds(MonitorTimerInterval);
+            MonitorTimer.Tick += (o, e) =>
             {
                 if (ButtonList == null) return;
                 for (int i = 0; i < keyslist.Count; i++)
@@ -222,7 +224,20 @@ namespace cw_onscl
                     {
                         foreach (var keydata in data.KeyDataList)
                         {
-                            keycheck = keysdic[keydata.Code];
+                            keycheck = (keydata.Code != 0) ? keysdic[keydata.Code] : true;
+                            if (data.MonoMonitor)
+                            {
+                                if (keydata.Shift) keycheck = keycheck && keysdic[160];
+                                if (keydata.Ctrl) keycheck = keycheck && keysdic[162];
+                                if (keydata.Alt) keycheck = keycheck && keysdic[164];
+                            }
+                            else
+                            {
+                                keycheck = keycheck
+                                    && !(keysdic[160] ^ keydata.Shift)
+                                    && !(keysdic[162] ^ keydata.Ctrl)
+                                    && !(keysdic[164] ^ keydata.Alt);
+                            }
                             if (!keycheck) break;
                         }
                     }
@@ -253,7 +268,7 @@ namespace cw_onscl
                     if (cb_border != null) ButtonList[i].BorderBrush = cb_border;
                 }
             };
-            MoniterTimer.Start();
+            MonitorTimer.Start();
         }
         private void SyncResize()
         {
@@ -312,6 +327,14 @@ namespace cw_onscl
             {
                 keysdic.Clear();
                 keyslist.Clear();
+
+                keyslist.Add(160);
+                keysdic.Add(160, ThisFormData.Monitor);
+                keyslist.Add(162);
+                keysdic.Add(162, ThisFormData.Monitor);
+                keyslist.Add(164);
+                keysdic.Add(164, ThisFormData.Monitor);
+
                 for (int i = 0; i < ButtonDataList.Count; i++)
                 {
                     ButtonData btnData = ButtonDataList[i];
@@ -448,12 +471,13 @@ namespace cw_onscl
                     bool itb = toggleBefore != i;
                     if (itb && (toggleBefore >= 0))
                     {
+                        cInput.LockKeyStock.Clear();
                         foreach (var kd in ButtonDataList[toggleBefore].KeyDataList)
                         {
                             cInput.KeySend(kd, CI.KeySendType.KeyUp);
                         }
                     }
-                    if (itb && btnData.AutoToggle)
+                    if (itb && !btnData.Overlap)
                         toggleBefore = i;
                     else
                         toggleBefore = -1;
