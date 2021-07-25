@@ -1,6 +1,7 @@
 {
     "width": 80,
     "height": 180,
+    "scale": 1,
     "monitor": true,
     "app-json": "%userprofile%/AppData/Local/Programs/Microsoft VS Code/Code.exe",
     "list": [
@@ -40,7 +41,7 @@
             "keydata": [
                 {
                     "code": 162,
-                    "keytype": 4
+                    "keytype": 3
                 }
             ],
             "margin": {
@@ -116,27 +117,13 @@
             }
         },
         {
-            "value": "scB",
+            "value": "sSpc",
             "width": "0.31",
+            "autotoggle": true,
             "keydata": [
                 {
-                    "code": 66,
-                    "keytype": 0,
-                    "shift": true,
-                    "ctrl": true
-                }
-            ],
-            "margin": {
-                "Top": 4, "Right": 0.03
-            }
-        },
-        {
-            "value": "sTab",
-            "width": "0.31",
-            "keydata": [
-                {
-                    "code": 9,
-                    "keytype": 0,
+                    "code": 32,
+                    "keytype": 4,
                     "shift": true
                 }
             ],
@@ -145,12 +132,28 @@
             }
         },
         {
-            "value": "Tab",
+            "value": "cSpc",
             "width": "0.31",
+            "autotoggle": true,
             "keydata": [
                 {
-                    "code": 9,
-                    "keytype": 0
+                    "code": 32,
+                    "keytype": 4,
+                    "ctrl": true
+                }
+            ],
+            "margin": {
+                "Top": 4, "Right": 0.03
+            }
+        },
+        {
+            "value": "Spc",
+            "width": "0.31",
+            "autotoggle": true,
+            "keydata": [
+                {
+                    "code": 32,
+                    "keytype": 4
                 }
             ],
             "margin": {

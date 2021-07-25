@@ -151,12 +151,15 @@ namespace System.Windows.Input.Custom
             };
             inputTimer.Start();
         }
-
         public void KeySend(KeyData<KeySendType> keyData)
+        {
+            KeySend(keyData, keyData.KeyType);
+        }
+        public void KeySend(KeyData<KeySendType> keyData, KeySendType keySendType)
         {
             if (keyData == null) return;
             bool keydown = false, keyup = false;
-            switch (keyData.KeyType)
+            switch (keySendType)
             {
                 case KeySendType.KeyClick:
                     keydown = true;
@@ -191,15 +194,15 @@ namespace System.Windows.Input.Custom
                     break;
             }
             if (keyData == null) return;
-            if (keyData.Win) KeySend(Keys.LWin, true, false);
-            if (keyData.Ctrl) KeySend(Keys.LControlKey, true, false);
-            if (keyData.Alt) KeySend(Keys.LAltKey, true, false);
-            if (keyData.Shift) KeySend(Keys.LShiftKey, true, false);
+            if (keyData.Win && keydown) KeySend(Keys.LWin, true, false);
+            if (keyData.Ctrl && keydown) KeySend(Keys.LControlKey, true, false);
+            if (keyData.Alt && keydown) KeySend(Keys.LAltKey, true, false);
+            if (keyData.Shift && keydown) KeySend(Keys.LShiftKey, true, false);
             KeySend((Keys)keyData.Code, keydown, keyup);
-            if (keyData.Shift) KeySend(Keys.LShiftKey, false, true);
-            if (keyData.Alt) KeySend(Keys.LAltKey, false, true);
-            if (keyData.Ctrl) KeySend(Keys.LControlKey, false, true);
-            if (keyData.Win) KeySend(Keys.LWin, false, true);
+            if (keyData.Shift && keyup) KeySend(Keys.LShiftKey, false, true);
+            if (keyData.Alt && keyup) KeySend(Keys.LAltKey, false, true);
+            if (keyData.Ctrl && keyup) KeySend(Keys.LControlKey, false, true);
+            if (keyData.Win && keyup) KeySend(Keys.LWin, false, true);
         }
         public void KeySend(Keys key, KeySendType keySendType = KeySendType.KeyClick)
         {

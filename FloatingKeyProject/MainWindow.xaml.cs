@@ -30,6 +30,8 @@ namespace cw_onscl
         public string TogglePicPath { get; set; }
         [DataMember(Name = "keydata")]
         public List<CI.KeyData<CI.KeySendType>> KeyDataList = new List<CI.KeyData<CI.KeySendType>>();
+        [DataMember(Name = "autotoggle")]
+        public bool AutoToggle { get; set; }
         [DataMember(Name = "pathdata")]
         public List<string> PathDataList = new List<string>();
         [DataMember(Name = "width")]
@@ -118,6 +120,7 @@ namespace cw_onscl
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int toggleBefore { get; set; }
         private CI cInput = null;
         private FormData ThisFormData = null;
         private string JsonFileName = "config.json";
@@ -167,6 +170,7 @@ namespace cw_onscl
         public MainWindow()
         {
             InitializeComponent();
+            toggleBefore = -1;
             btnPanel = FindName("panel") as WrapPanel;
             cInput = new CI(1, Dispatcher);
             ButtonList = new List<ContentControl>();
@@ -441,6 +445,18 @@ namespace cw_onscl
                 ButtonData btnData = ButtonDataList[i];
                 try
                 {
+                    bool itb = toggleBefore != i;
+                    if (itb && (toggleBefore >= 0))
+                    {
+                        foreach (var kd in ButtonDataList[toggleBefore].KeyDataList)
+                        {
+                            cInput.KeySend(kd, CI.KeySendType.KeyUp);
+                        }
+                    }
+                    if (itb && btnData.AutoToggle)
+                        toggleBefore = i;
+                    else
+                        toggleBefore = -1;
                     cInput.KeySend(btnData.KeyDataList);
                     if (btnData.PathDataList != null)
                         foreach (string path in btnData.PathDataList)
